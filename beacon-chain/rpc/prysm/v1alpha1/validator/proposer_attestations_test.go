@@ -3,11 +3,13 @@ package validator
 import (
 	"bytes"
 	"context"
+	"math/rand"
 	"sort"
 	"testing"
 
 	"github.com/prysmaticlabs/go-bitfield"
 	chainMock "github.com/prysmaticlabs/prysm/v5/beacon-chain/blockchain/testing"
+	"github.com/prysmaticlabs/prysm/v5/beacon-chain/core/helpers"
 	"github.com/prysmaticlabs/prysm/v5/beacon-chain/operations/attestations"
 	"github.com/prysmaticlabs/prysm/v5/beacon-chain/operations/attestations/mock"
 	"github.com/prysmaticlabs/prysm/v5/config/features"
@@ -816,6 +818,64 @@ func Test_packAttestations_ElectraOnChainAggregates(t *testing.T) {
 		require.Equal(t, 7, len(atts))
 		assert.Equal(t, true, atts[0].GetData().Slot == 1)
 	})
+}
+
+func Benchmark_packAttestations_Electra(b *testing.B) {
+	ctx := context.Background()
+
+	params.SetupTestConfigCleanup(b)
+	cfg := params.BeaconConfig().Copy()
+	cfg.ElectraForkEpoch = 1
+	params.OverrideBeaconConfig(cfg)
+
+	valCount := uint64(65536)
+	committeeCount := helpers.SlotCommitteeCount(valCount)
+	valsPerCommittee := valCount / committeeCount / uint64(params.BeaconConfig().SlotsPerEpoch)
+
+	st, _ := util.DeterministicGenesisStateElectra(b, valCount)
+
+	key, err := blst.RandKey()
+	require.NoError(b, err)
+	sig := key.Sign([]byte{'X'})
+
+	r := rand.New(rand.NewSource(123))
+
+	var atts []ethpb.Att
+	for i := uint64(0); i < uint64(params.BeaconConfig().SlotsPerEpoch); i++ {
+		for c := uint64(0); c < committeeCount; c++ {
+			for a := uint64(0); a < params.BeaconConfig().TargetAggregatorsPerCommittee; a++ {
+				cb := primitives.NewAttestationCommitteeBits()
+				cb.SetBitAt(c, true)
+
+				att := &ethpb.AttestationElectra{
+					Data:            util.HydrateAttestationData(&ethpb.AttestationData{BeaconBlockRoot: bytesutil.PadTo(bytesutil.Uint64ToBytesLittleEndian(i), 32)}),
+					AggregationBits: bitfield.NewBitlist(valsPerCommittee),
+					CommitteeBits:   cb,
+					Signature:       sig.Marshal(),
+				}
+
+				for bit := uint64(0); bit < valsPerCommittee; bit++ {
+					att.AggregationBits.SetBitAt(bit, r.Intn(2) == 1)
+				}
+
+				atts = append(atts, att)
+			}
+		}
+	}
+
+	pool := &mock.PoolMock{}
+	require.NoError(b, pool.SaveAggregatedAttestations(atts))
+
+	slot := primitives.Slot(1)
+	s := &Server{AttPool: pool, HeadFetcher: &chainMock.ChainService{}, TimeFetcher: &chainMock.ChainService{Slot: &slot}}
+
+	require.NoError(b, st.SetSlot(params.BeaconConfig().SlotsPerEpoch+1))
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_, err = s.packAttestations(ctx, st, params.BeaconConfig().SlotsPerEpoch)
+		require.NoError(b, err)
+	}
 }
 
 func Test_limitToMaxAttestations(t *testing.T) {
