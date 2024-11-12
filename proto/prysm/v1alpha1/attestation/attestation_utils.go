@@ -39,7 +39,7 @@ import (
 //	     data=attestation.data,
 //	     signature=attestation.signature,
 //	 )
-func ConvertToIndexed(ctx context.Context, attestation ethpb.Att, committees ...[]primitives.ValidatorIndex) (ethpb.IndexedAtt, error) {
+func ConvertToIndexed(_ context.Context, attestation ethpb.Att, committees ...[]primitives.ValidatorIndex) (ethpb.IndexedAtt, error) {
 	attIndices, err := AttestingIndices(attestation, committees...)
 	if err != nil {
 		return nil, err
@@ -185,11 +185,8 @@ func IsValidAttestationIndices(ctx context.Context, indexedAttestation ethpb.Ind
 	_, span := trace.StartSpan(ctx, "attestationutil.IsValidAttestationIndices")
 	defer span.End()
 
-	if indexedAttestation == nil ||
-		indexedAttestation.GetData() == nil ||
-		indexedAttestation.GetData().Target == nil ||
-		indexedAttestation.GetAttestingIndices() == nil {
-		return errors.New("nil or missing indexed attestation data")
+	if err := indexedAttestation.IsNil(); err != nil {
+		return errors.Wrap(err, "nil or missing indexed attestation data")
 	}
 	indices := indexedAttestation.GetAttestingIndices()
 	if len(indices) == 0 {

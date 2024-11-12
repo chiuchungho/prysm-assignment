@@ -309,6 +309,9 @@ func (indexedAtt *IndexedAttestation) IsNil() error {
 	if indexedAtt.GetData().Source == nil || indexedAtt.GetData().Target == nil {
 		return errors.New("source/target in attestation data is nil")
 	}
+	if len(indexedAtt.GetAttestingIndices()) == 0 {
+		return errors.New("indexed attestation indices is empty")
+	}
 	if len(indexedAtt.GetSignature()) == 0 {
 		return errors.New("attestation signature is empty")
 	}
@@ -331,6 +334,9 @@ func (indexedAtt *IndexedAttestationElectra) IsNil() error {
 	}
 	if indexedAtt.GetData().Source == nil || indexedAtt.GetData().Target == nil {
 		return errors.New("source/target in attestation data is nil")
+	}
+	if len(indexedAtt.GetAttestingIndices()) == 0 {
+		return errors.New("indexed attestation indices is empty")
 	}
 	if len(indexedAtt.GetSignature()) == 0 {
 		return errors.New("indexed attestation signature is empty")
