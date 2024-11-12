@@ -23,6 +23,9 @@ var (
 // Access to these nil fields will result in run time panic,
 // it is recommended to run these checks as first line of defense.
 func ValidateNilAttestation(attestation ethpb.Att) error {
+	if attestation == nil {
+		return errors.New("attestation is nil")
+	}
 	if err := attestation.IsNil(); err != nil {
 		return err
 	}

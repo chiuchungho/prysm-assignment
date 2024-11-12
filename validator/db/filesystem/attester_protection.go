@@ -131,6 +131,9 @@ func (s *Store) SaveAttestationForPubKey(
 	att ethpb.IndexedAtt,
 ) error {
 	// If there is no attestation, return on error.
+	if att == nil {
+		return errors.New("attestation is nil")
+	}
 	if err := att.IsNil(); err != nil {
 		return errors.Wrap(err, "incoming attestation does not contain source and/or target epoch")
 	}

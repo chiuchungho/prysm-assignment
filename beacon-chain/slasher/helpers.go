@@ -97,6 +97,9 @@ func (s *Service) filterAttestations(
 // detection (except for the genesis epoch).
 func validateAttestationIntegrity(att ethpb.IndexedAtt) bool {
 	// If an attestation is malformed, we drop it.
+	if att == nil {
+		return false
+	}
 	if err := att.IsNil(); err != nil {
 		return false
 	}

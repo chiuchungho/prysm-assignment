@@ -14,6 +14,9 @@ import (
 
 // SaveUnaggregatedAttestation saves an unaggregated attestation in cache.
 func (c *AttCaches) SaveUnaggregatedAttestation(att ethpb.Att) error {
+	if att == nil {
+		return nil
+	}
 	if err := att.IsNil(); err != nil {
 		//nolint:nilerr
 		return nil
@@ -131,6 +134,9 @@ func (c *AttCaches) UnaggregatedAttestationsBySlotIndexElectra(
 
 // DeleteUnaggregatedAttestation deletes the unaggregated attestations in cache.
 func (c *AttCaches) DeleteUnaggregatedAttestation(att ethpb.Att) error {
+	if att == nil {
+		return nil
+	}
 	if err := att.IsNil(); err != nil {
 		//nolint:nilerr
 		return nil
