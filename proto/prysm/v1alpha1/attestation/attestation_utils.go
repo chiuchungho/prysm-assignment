@@ -188,6 +188,7 @@ func IsValidAttestationIndices(ctx context.Context, indexedAttestation ethpb.Ind
 	if err := indexedAttestation.IsNil(); err != nil {
 		return errors.Wrap(err, "nil or missing indexed attestation data")
 	}
+
 	indices := indexedAttestation.GetAttestingIndices()
 	if len(indices) == 0 {
 		return errors.New("expected non-empty attesting indices")

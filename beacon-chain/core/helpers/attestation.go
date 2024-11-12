@@ -23,7 +23,13 @@ var (
 // Access to these nil fields will result in run time panic,
 // it is recommended to run these checks as first line of defense.
 func ValidateNilAttestation(attestation ethpb.Att) error {
-	return attestation.IsNil()
+	if err := attestation.IsNil(); err != nil {
+		return err
+	}
+	if attestation.GetAggregationBits() == nil {
+		return errors.New("attestation's bitfield can't be nil")
+	}
+	return nil
 }
 
 // ValidateSlotTargetEpoch checks if attestation data's epoch matches target checkpoint's epoch.
