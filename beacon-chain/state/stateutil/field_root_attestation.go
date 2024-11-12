@@ -48,7 +48,7 @@ func EpochAttestationsRoot(atts []*ethpb.PendingAttestation) ([32]byte, error) {
 }
 
 func pendingAttestationRoot(att *ethpb.PendingAttestation) ([32]byte, error) {
-	if att == nil {
+	if err := att.IsNil(); err != nil {
 		return [32]byte{}, errors.New("nil pending attestation")
 	}
 	return PendingAttRootWithHasher(att)

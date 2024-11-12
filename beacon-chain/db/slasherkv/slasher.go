@@ -688,8 +688,11 @@ func decodeSlasherChunk(enc []byte) ([]uint16, error) {
 // Encode attestation record to bytes.
 // The output encoded attestation record consists in the signing root concatenated with the compressed attestation record.
 func encodeAttestationRecord(att *slashertypes.IndexedAttestationWrapper) ([]byte, error) {
-	if att == nil || att.IndexedAttestation == nil {
+	if att == nil {
 		return []byte{}, errors.New("nil proposal record")
+	}
+	if err := att.IndexedAttestation.IsNil(); err != nil {
+		return []byte{}, err
 	}
 
 	// Encode attestation.

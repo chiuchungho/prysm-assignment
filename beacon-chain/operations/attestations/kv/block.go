@@ -8,7 +8,7 @@ import (
 
 // SaveBlockAttestation saves an block attestation in cache.
 func (c *AttCaches) SaveBlockAttestation(att ethpb.Att) error {
-	if att == nil {
+	if err := att.IsNil(); err != nil {
 		return nil
 	}
 

@@ -25,6 +25,7 @@ type Att interface {
 	CommitteeBitsVal() bitfield.Bitfield
 	GetSignature() []byte
 	GetCommitteeIndex() (primitives.CommitteeIndex, error)
+	IsNil() error
 }
 
 // IndexedAtt defines common functionality for all indexed attestation types.
@@ -37,6 +38,7 @@ type IndexedAtt interface {
 	GetAttestingIndices() []uint64
 	GetData() *AttestationData
 	GetSignature() []byte
+	IsNil() error
 }
 
 // SignedAggregateAttAndProof defines common functionality for all signed aggregate attestation types.
@@ -48,6 +50,7 @@ type SignedAggregateAttAndProof interface {
 	Version() int
 	AggregateAttestationAndProof() AggregateAttAndProof
 	GetSignature() []byte
+	IsNil() error
 }
 
 // AggregateAttAndProof defines common functionality for all aggregate attestation types.
@@ -60,6 +63,7 @@ type AggregateAttAndProof interface {
 	GetAggregatorIndex() primitives.ValidatorIndex
 	AggregateVal() Att
 	GetSelectionProof() []byte
+	IsNil() error
 }
 
 // AttSlashing defines common functionality for all attestation slashing types.
@@ -71,6 +75,7 @@ type AttSlashing interface {
 	Version() int
 	FirstAttestation() IndexedAtt
 	SecondAttestation() IndexedAtt
+	IsNil() error
 }
 
 // Copy --
@@ -103,6 +108,28 @@ func (a *Attestation) Version() int {
 	return version.Phase0
 }
 
+// IsNil --
+func (a *Attestation) IsNil() error {
+	if a == nil {
+		return errors.New("attestation is nil")
+	}
+	if a.GetData() == nil {
+		return errors.New("attestation data is nil")
+	}
+	if a.GetData().Source == nil || a.GetData().Target == nil {
+		return errors.New("source/target in attestation data is nil")
+	}
+	if len(a.GetAggregationBits()) == 0 {
+		return errors.New("attestation aggregation bits is empty")
+	}
+
+	if len(a.GetSignature()) == 0 {
+		return errors.New("attestation signature is empty")
+	}
+
+	return nil
+}
+
 // Clone --
 func (a *Attestation) Clone() Att {
 	return a.Copy()
@@ -110,7 +137,7 @@ func (a *Attestation) Clone() Att {
 
 // Copy --
 func (att *Attestation) Copy() *Attestation {
-	if att == nil {
+	if err := att.IsNil(); err != nil {
 		return nil
 	}
 	return &Attestation{
@@ -138,6 +165,28 @@ func (a *Attestation) GetCommitteeIndex() (primitives.CommitteeIndex, error) {
 // Version --
 func (a *PendingAttestation) Version() int {
 	return version.Phase0
+}
+
+// IsNil --
+func (a *PendingAttestation) IsNil() error {
+	if a == nil {
+		return errors.New("attestation is nil")
+	}
+	if a.GetData() == nil {
+		return errors.New("attestation data is nil")
+	}
+	if a.GetData().Source == nil || a.GetData().Target == nil {
+		return errors.New("source/target in attestation data is nil")
+	}
+	if len(a.GetAggregationBits()) == 0 {
+		return errors.New("attestation aggregation bits is empty")
+	}
+
+	if len(a.GetSignature()) == 0 {
+		return errors.New("attestation signature is empty")
+	}
+
+	return nil
 }
 
 // Clone --
@@ -179,6 +228,28 @@ func (a *PendingAttestation) GetCommitteeIndex() (primitives.CommitteeIndex, err
 // Version --
 func (a *AttestationElectra) Version() int {
 	return version.Electra
+}
+
+// IsNil --
+func (a *AttestationElectra) IsNil() error {
+	if a == nil {
+		return errors.New("attestation is nil")
+	}
+	if a.GetData() == nil {
+		return errors.New("attestation data is nil")
+	}
+	if a.GetData().Source == nil || a.GetData().Target == nil {
+		return errors.New("source/target in attestation data is nil")
+	}
+	if len(a.GetAggregationBits()) == 0 {
+		return errors.New("attestation aggregation bits is empty")
+	}
+
+	if len(a.GetSignature()) == 0 {
+		return errors.New("attestation signature is empty")
+	}
+
+	return nil
 }
 
 // Clone --
@@ -223,13 +294,49 @@ func (a *AttestationElectra) GetCommitteeIndex() (primitives.CommitteeIndex, err
 }
 
 // Version --
-func (a *IndexedAttestation) Version() int {
+func (indexedAtt *IndexedAttestation) Version() int {
 	return version.Phase0
 }
 
+// IsNil --
+func (indexedAtt *IndexedAttestation) IsNil() error {
+	if indexedAtt == nil {
+		return errors.New("attestation is nil")
+	}
+	if indexedAtt.GetData() == nil {
+		return errors.New("attestation data is nil")
+	}
+	if indexedAtt.GetData().Source == nil || indexedAtt.GetData().Target == nil {
+		return errors.New("source/target in attestation data is nil")
+	}
+	if len(indexedAtt.GetSignature()) == 0 {
+		return errors.New("attestation signature is empty")
+	}
+
+	return nil
+}
+
 // Version --
-func (a *IndexedAttestationElectra) Version() int {
+func (indexedAtt *IndexedAttestationElectra) Version() int {
 	return version.Electra
+}
+
+// IsNil --
+func (indexedAtt *IndexedAttestationElectra) IsNil() error {
+	if indexedAtt == nil {
+		return errors.New("indexed attestation is nil")
+	}
+	if indexedAtt.GetData() == nil {
+		return errors.New("indexed attestation data is nil")
+	}
+	if indexedAtt.GetData().Source == nil || indexedAtt.GetData().Target == nil {
+		return errors.New("source/target in attestation data is nil")
+	}
+	if len(indexedAtt.GetSignature()) == 0 {
+		return errors.New("indexed attestation signature is empty")
+	}
+
+	return nil
 }
 
 // Copy --
@@ -269,6 +376,20 @@ func (a *AttesterSlashing) Version() int {
 	return version.Phase0
 }
 
+// IsNil --
+func (a *AttesterSlashing) IsNil() error {
+	if a == nil {
+		return errors.New("attestation slashing is nil")
+	}
+	if err := a.Attestation_1.IsNil(); err != nil {
+		return err
+	}
+	if err := a.Attestation_2.IsNil(); err != nil {
+		return err
+	}
+	return nil
+}
+
 // FirstAttestation --
 func (a *AttesterSlashing) FirstAttestation() IndexedAtt {
 	return a.Attestation_1
@@ -282,6 +403,20 @@ func (a *AttesterSlashing) SecondAttestation() IndexedAtt {
 // Version --
 func (a *AttesterSlashingElectra) Version() int {
 	return version.Electra
+}
+
+// IsNil --
+func (a *AttesterSlashingElectra) IsNil() error {
+	if a == nil {
+		return errors.New("attestation slashing is nil")
+	}
+	if err := a.Attestation_1.IsNil(); err != nil {
+		return err
+	}
+	if err := a.Attestation_2.IsNil(); err != nil {
+		return err
+	}
+	return nil
 }
 
 // FirstAttestation --
@@ -320,6 +455,17 @@ func (a *AggregateAttestationAndProof) Version() int {
 	return version.Phase0
 }
 
+// IsNil --
+func (a *AggregateAttestationAndProof) IsNil() error {
+	if a == nil {
+		return errors.New("aggregateAttestationAndProof is nil")
+	}
+	if a.Aggregate == nil {
+		return errors.New("aggregate is nil")
+	}
+	return nil
+}
+
 // AggregateVal --
 func (a *AggregateAttestationAndProof) AggregateVal() Att {
 	return a.Aggregate
@@ -328,6 +474,17 @@ func (a *AggregateAttestationAndProof) AggregateVal() Att {
 // Version --
 func (a *AggregateAttestationAndProofElectra) Version() int {
 	return version.Electra
+}
+
+// IsNil --
+func (a *AggregateAttestationAndProofElectra) IsNil() error {
+	if a == nil {
+		return errors.New("aggregateAttestationAndProof is nil")
+	}
+	if a.Aggregate == nil {
+		return errors.New("aggregate is nil")
+	}
+	return nil
 }
 
 // AggregateVal --
@@ -340,6 +497,20 @@ func (a *SignedAggregateAttestationAndProof) Version() int {
 	return version.Phase0
 }
 
+// IsNil --
+func (a *SignedAggregateAttestationAndProof) IsNil() error {
+	if a == nil {
+		return errors.New("signedAggregateAttestationAndProof is nil")
+	}
+	if err := a.Message.IsNil(); err != nil {
+		return err
+	}
+	if len(a.Signature) == 0 {
+		return errors.New("signature is empty")
+	}
+	return nil
+}
+
 // AggregateAttestationAndProof --
 func (a *SignedAggregateAttestationAndProof) AggregateAttestationAndProof() AggregateAttAndProof {
 	return a.Message
@@ -348,6 +519,20 @@ func (a *SignedAggregateAttestationAndProof) AggregateAttestationAndProof() Aggr
 // Version --
 func (a *SignedAggregateAttestationAndProofElectra) Version() int {
 	return version.Electra
+}
+
+// IsNil --
+func (a *SignedAggregateAttestationAndProofElectra) IsNil() error {
+	if a == nil {
+		return errors.New("signedAggregateAttestationAndProof is nil")
+	}
+	if err := a.Message.IsNil(); err != nil {
+		return err
+	}
+	if len(a.Signature) == 0 {
+		return errors.New("signature is empty")
+	}
+	return nil
 }
 
 // AggregateAttestationAndProof --
