@@ -119,9 +119,6 @@ func (a *Attestation) IsNil() error {
 	if a.GetData().Source == nil || a.GetData().Target == nil {
 		return errors.New("source/target in attestation data is nil")
 	}
-	if a.GetAggregationBits() == nil {
-		return errors.New("attestation aggregation bits is empty")
-	}
 
 	return nil
 }
@@ -173,9 +170,6 @@ func (a *PendingAttestation) IsNil() error {
 	}
 	if a.GetData().Source == nil || a.GetData().Target == nil {
 		return errors.New("source/target in attestation data is nil")
-	}
-	if a.GetAggregationBits() == nil {
-		return errors.New("attestation aggregation bits is empty")
 	}
 
 	return nil
@@ -232,9 +226,6 @@ func (a *AttestationElectra) IsNil() error {
 	}
 	if a.GetData().Source == nil || a.GetData().Target == nil {
 		return errors.New("source/target in attestation data is nil")
-	}
-	if a.GetAggregationBits() == nil {
-		return errors.New("attestation aggregation bits is empty")
 	}
 
 	return nil
