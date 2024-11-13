@@ -123,7 +123,7 @@ func (a *Attestation) Clone() Att {
 
 // Copy --
 func (att *Attestation) Copy() *Attestation {
-	if att == nil || att.IsNil() {
+	if att == nil {
 		return nil
 	}
 	return &Attestation{

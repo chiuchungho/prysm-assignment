@@ -489,6 +489,7 @@ func TestValidateIndexedAttestation_BadAttestationsSignatureSet(t *testing.T) {
 				Target: &ethpb.Checkpoint{
 					Root: []byte{},
 				},
+				Source: &ethpb.Checkpoint{},
 			},
 			Signature:       sig.Marshal(),
 			AggregationBits: list,
