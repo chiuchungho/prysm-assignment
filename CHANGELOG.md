@@ -79,8 +79,8 @@ The format is based on Keep a Changelog, and this project adheres to Semantic Ve
 - Small log imporvement, removing some redundant or duplicate logs
 - EIP7521 - Fixes withdrawal bug by accounting for pending partial withdrawals and deducting already withdrawn amounts from the sweep balance. [PR](https://github.com/prysmaticlabs/prysm/pull/14578)
 - unskip electra merkle spec test
+- Fix panic in validator REST mode when checking status after removing all keys
 - corrects nil check on some interface attestation types
-
 
 ### Security
 
