@@ -131,7 +131,7 @@ func (s *Store) SaveAttestationForPubKey(
 	att ethpb.IndexedAtt,
 ) error {
 	// If there is no attestation, return on error.
-	if att == nil || att.IsNil() || att.GetData().Target == nil || att.GetData().Source == nil {
+	if att == nil || att.IsNil() || att.GetData().Source == nil || att.GetData().Target == nil {
 		return errors.New("incoming attestation does not contain source and/or target epoch")
 	}
 	// Get validator slashing protection.

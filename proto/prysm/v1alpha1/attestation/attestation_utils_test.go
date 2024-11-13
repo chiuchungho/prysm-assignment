@@ -109,7 +109,7 @@ func TestIsValidAttestationIndices(t *testing.T) {
 				},
 				Signature: make([]byte, fieldparams.BLSSignatureLength),
 			},
-			wantedErr: "nil or missing indexed attestation data",
+			wantedErr: "expected non-empty attesting indices",
 		},
 		{
 			name: "Indices should be non-empty",
