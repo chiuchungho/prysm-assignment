@@ -448,6 +448,7 @@ func TestValidateIndexedAttestation_AboveMaxLength(t *testing.T) {
 			Target: &ethpb.Checkpoint{
 				Epoch: primitives.Epoch(i),
 			},
+			Source: &ethpb.Checkpoint{},
 		}
 	}
 
