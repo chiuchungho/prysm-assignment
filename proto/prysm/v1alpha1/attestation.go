@@ -110,13 +110,9 @@ func (a *Attestation) Version() int {
 
 // IsNil --
 func (a *Attestation) IsNil() bool {
-	if a == nil {
+	if a == nil || a.Data == nil {
 		return true
 	}
-	if a.GetData() == nil {
-		return true
-	}
-
 	return false
 }
 
@@ -159,13 +155,9 @@ func (a *PendingAttestation) Version() int {
 
 // IsNil --
 func (a *PendingAttestation) IsNil() bool {
-	if a == nil {
+	if a == nil || a.Data == nil {
 		return true
 	}
-	if a.GetData() == nil {
-		return true
-	}
-
 	return false
 }
 
@@ -176,7 +168,7 @@ func (a *PendingAttestation) Clone() Att {
 
 // Copy --
 func (a *PendingAttestation) Copy() *PendingAttestation {
-	if a == nil || a.Data == nil {
+	if a == nil {
 		return nil
 	}
 	return &PendingAttestation{
@@ -212,13 +204,9 @@ func (a *AttestationElectra) Version() int {
 
 // IsNil --
 func (a *AttestationElectra) IsNil() bool {
-	if a == nil {
+	if a == nil || a.Data == nil {
 		return true
 	}
-	if a.GetData() == nil {
-		return true
-	}
-
 	return false
 }
 
@@ -229,7 +217,7 @@ func (a *AttestationElectra) Clone() Att {
 
 // Copy --
 func (att *AttestationElectra) Copy() *AttestationElectra {
-	if att == nil || att.Data == nil {
+	if att == nil {
 		return nil
 	}
 	return &AttestationElectra{
@@ -270,10 +258,9 @@ func (indexedAtt *IndexedAttestation) Version() int {
 
 // IsNil --
 func (indexedAtt *IndexedAttestation) IsNil() bool {
-	if indexedAtt == nil || indexedAtt.GetData() == nil {
+	if indexedAtt == nil || indexedAtt.Data == nil {
 		return true
 	}
-
 	return false
 }
 
@@ -284,7 +271,7 @@ func (indexedAtt *IndexedAttestationElectra) Version() int {
 
 // IsNil --
 func (indexedAtt *IndexedAttestationElectra) IsNil() bool {
-	if indexedAtt == nil || indexedAtt.GetData() == nil {
+	if indexedAtt == nil || indexedAtt.Data == nil {
 		return true
 	}
 
@@ -294,7 +281,7 @@ func (indexedAtt *IndexedAttestationElectra) IsNil() bool {
 // Copy --
 func (indexedAtt *IndexedAttestation) Copy() *IndexedAttestation {
 	var indices []uint64
-	if indexedAtt == nil || indexedAtt.GetData() == nil {
+	if indexedAtt == nil {
 		return nil
 	} else if indexedAtt.AttestingIndices != nil {
 		indices = make([]uint64, len(indexedAtt.AttestingIndices))
@@ -310,7 +297,7 @@ func (indexedAtt *IndexedAttestation) Copy() *IndexedAttestation {
 // Copy --
 func (indexedAtt *IndexedAttestationElectra) Copy() *IndexedAttestationElectra {
 	var indices []uint64
-	if indexedAtt == nil || indexedAtt.GetData() == nil {
+	if indexedAtt == nil {
 		return nil
 	} else if indexedAtt.AttestingIndices != nil {
 		indices = make([]uint64, len(indexedAtt.AttestingIndices))
