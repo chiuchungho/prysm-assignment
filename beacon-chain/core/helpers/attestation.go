@@ -23,11 +23,14 @@ var (
 // Access to these nil fields will result in run time panic,
 // it is recommended to run these checks as first line of defense.
 func ValidateNilAttestation(attestation ethpb.Att) error {
-	if attestation == nil {
+	if attestation == nil || attestation.IsNil() {
 		return errors.New("attestation is nil")
 	}
-	if err := attestation.IsNil(); err != nil {
-		return err
+	if attestation.GetData().Source == nil {
+		return errors.New("attestation's source can't be nil")
+	}
+	if attestation.GetData().Target == nil {
+		return errors.New("attestation's target can't be nil")
 	}
 	if attestation.GetAggregationBits() == nil {
 		return errors.New("attestation's bitfield can't be nil")

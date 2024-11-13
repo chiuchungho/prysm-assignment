@@ -8,11 +8,7 @@ import (
 
 // SaveBlockAttestation saves an block attestation in cache.
 func (c *AttCaches) SaveBlockAttestation(att ethpb.Att) error {
-	if att == nil {
-		return nil
-	}
-	if err := att.IsNil(); err != nil {
-		//nolint:nilerr
+	if att == nil || att.IsNil() {
 		return nil
 	}
 
@@ -57,11 +53,7 @@ func (c *AttCaches) BlockAttestations() []ethpb.Att {
 
 // DeleteBlockAttestation deletes a block attestation in cache.
 func (c *AttCaches) DeleteBlockAttestation(att ethpb.Att) error {
-	if att == nil {
-		return nil
-	}
-	if err := att.IsNil(); err != nil {
-		//nolint:nilerr
+	if att == nil || att.IsNil() {
 		return nil
 	}
 	id, err := attestation.NewId(att, attestation.Data)
