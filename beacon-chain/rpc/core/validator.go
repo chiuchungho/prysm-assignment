@@ -381,11 +381,8 @@ func (s *Service) SubmitSignedAggregateSelectionProof(
 	ctx, span := trace.StartSpan(ctx, "coreService.SubmitSignedAggregateSelectionProof")
 	defer span.End()
 
-	if agg == nil {
+	if agg == nil || agg.IsNil() {
 		return &RpcError{Err: errors.New("signed aggregate request can't be nil"), Reason: BadRequest}
-	}
-	if err := agg.IsNil(); err != nil {
-		return &RpcError{Err: errors.Wrap(err, "signed aggregate request can't be nil"), Reason: BadRequest}
 	}
 	attAndProof := agg.AggregateAttestationAndProof()
 	att := attAndProof.AggregateVal()
