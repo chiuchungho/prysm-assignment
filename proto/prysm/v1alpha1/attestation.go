@@ -110,10 +110,7 @@ func (a *Attestation) Version() int {
 
 // IsNil --
 func (a *Attestation) IsNil() bool {
-	if a == nil || a.Data == nil {
-		return true
-	}
-	return false
+	return a == nil || a.Data == nil
 }
 
 // Clone --
@@ -122,14 +119,14 @@ func (a *Attestation) Clone() Att {
 }
 
 // Copy --
-func (att *Attestation) Copy() *Attestation {
-	if att == nil {
+func (a *Attestation) Copy() *Attestation {
+	if a == nil {
 		return nil
 	}
 	return &Attestation{
-		AggregationBits: bytesutil.SafeCopyBytes(att.AggregationBits),
-		Data:            att.Data.Copy(),
-		Signature:       bytesutil.SafeCopyBytes(att.Signature),
+		AggregationBits: bytesutil.SafeCopyBytes(a.AggregationBits),
+		Data:            a.Data.Copy(),
+		Signature:       bytesutil.SafeCopyBytes(a.Signature),
 	}
 }
 
@@ -155,10 +152,7 @@ func (a *PendingAttestation) Version() int {
 
 // IsNil --
 func (a *PendingAttestation) IsNil() bool {
-	if a == nil || a.Data == nil {
-		return true
-	}
-	return false
+	return a == nil || a.Data == nil
 }
 
 // Clone --
@@ -204,10 +198,7 @@ func (a *AttestationElectra) Version() int {
 
 // IsNil --
 func (a *AttestationElectra) IsNil() bool {
-	if a == nil || a.Data == nil {
-		return true
-	}
-	return false
+	return a == nil || a.Data == nil
 }
 
 // Clone --
@@ -216,15 +207,15 @@ func (a *AttestationElectra) Clone() Att {
 }
 
 // Copy --
-func (att *AttestationElectra) Copy() *AttestationElectra {
-	if att == nil {
+func (a *AttestationElectra) Copy() *AttestationElectra {
+	if a == nil {
 		return nil
 	}
 	return &AttestationElectra{
-		AggregationBits: bytesutil.SafeCopyBytes(att.AggregationBits),
-		CommitteeBits:   bytesutil.SafeCopyBytes(att.CommitteeBits),
-		Data:            att.Data.Copy(),
-		Signature:       bytesutil.SafeCopyBytes(att.Signature),
+		AggregationBits: bytesutil.SafeCopyBytes(a.AggregationBits),
+		CommitteeBits:   bytesutil.SafeCopyBytes(a.CommitteeBits),
+		Data:            a.Data.Copy(),
+		Signature:       bytesutil.SafeCopyBytes(a.Signature),
 	}
 }
 
@@ -258,10 +249,7 @@ func (indexedAtt *IndexedAttestation) Version() int {
 
 // IsNil --
 func (indexedAtt *IndexedAttestation) IsNil() bool {
-	if indexedAtt == nil || indexedAtt.Data == nil {
-		return true
-	}
-	return false
+	return indexedAtt == nil || indexedAtt.Data == nil
 }
 
 // Version --
@@ -271,11 +259,7 @@ func (indexedAtt *IndexedAttestationElectra) Version() int {
 
 // IsNil --
 func (indexedAtt *IndexedAttestationElectra) IsNil() bool {
-	if indexedAtt == nil || indexedAtt.Data == nil {
-		return true
-	}
-
-	return false
+	return indexedAtt == nil || indexedAtt.Data == nil
 }
 
 // Copy --
@@ -317,12 +301,9 @@ func (a *AttesterSlashing) Version() int {
 
 // IsNil --
 func (a *AttesterSlashing) IsNil() bool {
-	if a == nil ||
+	return a == nil ||
 		a.Attestation_1 == nil || a.Attestation_1.IsNil() ||
-		a.Attestation_2 == nil || a.Attestation_2.IsNil() {
-		return true
-	}
-	return false
+		a.Attestation_2 == nil || a.Attestation_2.IsNil()
 }
 
 // FirstAttestation --
@@ -342,12 +323,9 @@ func (a *AttesterSlashingElectra) Version() int {
 
 // IsNil --
 func (a *AttesterSlashingElectra) IsNil() bool {
-	if a == nil ||
+	return a == nil ||
 		a.Attestation_1 == nil || a.Attestation_1.IsNil() ||
-		a.Attestation_2 == nil || a.Attestation_2.IsNil() {
-		return true
-	}
-	return false
+		a.Attestation_2 == nil || a.Attestation_2.IsNil()
 }
 
 // FirstAttestation --
@@ -388,10 +366,7 @@ func (a *AggregateAttestationAndProof) Version() int {
 
 // IsNil --
 func (a *AggregateAttestationAndProof) IsNil() bool {
-	if a == nil || a.Aggregate == nil || a.Aggregate.IsNil() {
-		return true
-	}
-	return false
+	return a == nil || a.Aggregate == nil || a.Aggregate.IsNil()
 }
 
 // AggregateVal --
@@ -406,10 +381,7 @@ func (a *AggregateAttestationAndProofElectra) Version() int {
 
 // IsNil --
 func (a *AggregateAttestationAndProofElectra) IsNil() bool {
-	if a == nil || a.Aggregate == nil || a.Aggregate.IsNil() {
-		return true
-	}
-	return false
+	return a == nil || a.Aggregate == nil || a.Aggregate.IsNil()
 }
 
 // AggregateVal --
@@ -424,10 +396,7 @@ func (a *SignedAggregateAttestationAndProof) Version() int {
 
 // IsNil --
 func (a *SignedAggregateAttestationAndProof) IsNil() bool {
-	if a == nil || a.Message == nil || a.Message.IsNil() {
-		return true
-	}
-	return false
+	return a == nil || a.Message == nil || a.Message.IsNil()
 }
 
 // AggregateAttestationAndProof --
@@ -442,10 +411,7 @@ func (a *SignedAggregateAttestationAndProofElectra) Version() int {
 
 // IsNil --
 func (a *SignedAggregateAttestationAndProofElectra) IsNil() bool {
-	if a == nil || a.Message == nil || a.Message.IsNil() {
-		return true
-	}
-	return false
+	return a == nil || a.Message == nil || a.Message.IsNil()
 }
 
 // AggregateAttestationAndProof --
