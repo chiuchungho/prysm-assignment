@@ -16,6 +16,7 @@ import (
 	"github.com/prysmaticlabs/prysm/v5/beacon-chain/slasher/types"
 	"github.com/prysmaticlabs/prysm/v5/beacon-chain/state"
 	"github.com/prysmaticlabs/prysm/v5/config/features"
+	"github.com/prysmaticlabs/prysm/v5/config/params"
 	"github.com/prysmaticlabs/prysm/v5/consensus-types/blocks"
 	consensus_blocks "github.com/prysmaticlabs/prysm/v5/consensus-types/blocks"
 	consensusblocks "github.com/prysmaticlabs/prysm/v5/consensus-types/blocks"
@@ -169,6 +170,15 @@ func (s *Service) updateCheckpoints(
 		}
 		if err := reportEpochMetrics(ctx, postState, headSt); err != nil {
 			log.WithError(err).Error("could not report epoch metrics")
+		}
+
+		// Check if attestationsStats is null first
+		// to ensure it is initiated
+		// Generate report for the attestationsStats for every epoch
+		// it is used to debug this node if it is verfying attestation correctly
+		if s.attestationsStats != nil {
+			currentEpoch := primitives.Epoch(postState.Slot() / params.BeaconConfig().SlotsPerEpoch)
+			s.attestationsStats.ReportEpochTransition(uint64(currentEpoch))
 		}
 	}
 	if err := s.updateJustificationOnBlock(ctx, preState, postState, cp.j); err != nil {

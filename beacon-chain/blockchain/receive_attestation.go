@@ -211,6 +211,23 @@ func (s *Service) processAttestations(ctx context.Context, disparity time.Durati
 				}
 			}
 			log.WithFields(fields).WithError(err).Warn("Could not process attestation for fork choice")
+
+			// check if attestationsStats is null first
+			// to ensure it is initiated
+			// add failed count, attestation details and error to AttestationsStats
+			if s.attestationsStats != nil {
+				s.attestationsStats.AddFailure(FailedAttestation{
+					Fields: fields,
+					Error:  err,
+				})
+			}
+		}
+
+		// check if attestationsStats is null first
+		// to ensure it is initiated
+		// add successful count to AttestationsStats
+		if s.attestationsStats != nil {
+			s.attestationsStats.AddSuccess()
 		}
 	}
 }
